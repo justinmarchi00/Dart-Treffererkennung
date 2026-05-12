@@ -125,5 +125,33 @@ Ein funktionierendes System, das:
 *Quelle: https://i.etsystatic.com/58075119/r/il/a46dd5/7300756379/il_1588xN.7300756379_7i1j.jpg*
 ---
 
+
+# Kosten Kalkulation
+
+| Pos. | Bezeichnung | Beschreibung | Link | Anzahl | Preis | Gesamt |
+|------|-------------|--------------|------|--------|-------|---------|
+| 1 | Dartscheibe | Dartscheibe | besitzen wir schon | 1 | - € | - € |
+| 2 | Darts Camera and LED Ring mount | Konstruktion Kameras | [Printables](https://www.printables.com/model/875543-darts-camera-and-led-ring-mount-by-3dengelen#hardware-required-) | 1 | - € | - € |
+| 3 | OV9732 Kameramodul 3er Set | Kamera | [Amazon](https://www.amazon.de/) | 3 | 9,92 € | 29,76 € |
+| 4 | Aufprallsensor | Aufprallsensor | [Reichelt](https://www.reichelt.de/) | 2 | 2,70 € | 5,40 € |
+| 5 | Arduino - Piezo Vibrationssensor | Arduino | besitzen wir schon | 1 | - € | - € |
+| 6 | USB 3.0 Hub | USB 3.0 Hub | [Amazon](https://www.amazon.de/) | 1 | 13,99 € | 13,99 € |
+| 7 | Verlängerungskabel USB | Verlängerungskabel USB | [Reichelt](https://www.reichelt.de/) | 1 | 19,99 € | 19,99 € |
+| 8 | M3, M4 Gewindeeinsätze | M3 Gewindeeinsätze | [Amazon](https://www.amazon.de/) | 1 | 19,99 € | 19,99 € |
+| 9 | M3*8mm Flachkopfschrauben | M3 Schrauben | [Amazon](https://www.amazon.de/) | 1 | 5,99 € | 5,99 € |
+| 10 | M4x16 mm Flachkopfschrauben | M4 Schrauben | [Amazon](https://www.amazon.de/) | 1 | 6,99 € | 6,99 € |
+| 11 | M4x12 mm Flachkopfschrauben | M4 Schrauben | [Amazon](https://www.amazon.de/) | 1 | 6,99 € | 6,99 € |
+| 12 | M2x6 Schrauben, Zylinderkopfschrauben | M2 Schrauben | [Amazon](https://www.amazon.de/) | 1 | 4,99 € | 4,99 € |
+| 13 | Widerstände Arduino | Widerstände Arduino | besitzen wir schon | 1 | - € | - € |
+| 14 | Kabelmaterial | Kabelmaterial | besitzen wir schon | 1 | - € | - € |
+| 15 | Filament Schwarz PETG | Filament | Herr Dirks bestellt Filament | 2 | 25,00 € | 50,00 € |
+
+---
+
+## Gesamt
+
+**164,09 €**
+
+
 ## 👥 Team
 *Justin Marchi, Luca Ratz, Paul Peter, Christopher Enk*
