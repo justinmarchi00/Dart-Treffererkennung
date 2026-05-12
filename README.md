@@ -118,7 +118,7 @@ Ein funktionierendes System, das:
 
 ---
 
-## Beispielbild
+## 📸 Beispielbild
 
 <img width="1588" height="2117" alt="Image" src="https://github.com/user-attachments/assets/1ea0431b-4e36-47dc-8f1a-193951b64fb5" />
 
