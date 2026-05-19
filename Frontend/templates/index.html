@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+            </div>
+
+            <div class="stat-box">
+                <span>Bestes Finish</span>
+                <strong>120</strong>
+            </div>
+
+            <div class="stat-box">
+                <span>Average</span>
+                <strong>58.2</strong>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- CENTER -->
+
+    <section class="center-content">
+
+        <div class="hit-display">
+            <span>LETZTER TREFFER</span>
+            <h1 id="last-hit">TRIPLE 20</h1>
+            <p id="points">+60 Punkte</p>
+        </div>
+
+        <div class="players" id="players-container"></div>
+
+    </section>
+
+    <!-- RIGHT -->
+
+    <aside class="sidebar-right">
+
+        <div class="panel">
+            <h2>Board Analyse</h2>
+
+            <div class="board-preview">
+                <div class="dart-hit"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-top">
+                <h2>Wurfhistorie</h2>
+            </div>
+
+            <div id="history-container"></div>
+        </div>
+
+        <div class="panel">
+            <h2>Steuerung</h2>
+
+            <button class="control-btn green">
+                Nächster Spieler
+            </button>
+
+            <button class="control-btn gray">
+                Wurf zurücknehmen
+            </button>
+
+            <button class="control-btn red">
+                Spiel zurücksetzen
+            </button>
+        </div>
+
+    </aside>
+
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
