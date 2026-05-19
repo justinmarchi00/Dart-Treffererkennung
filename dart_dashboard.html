@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dart Score Dashboard</title>
+
+  <!-- GOOGLE FONTS
+       Bebas Neue  -> Display-Zahlen (groß, markant)
+       Rajdhani    -> Tabellentexte (technisch, klar) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* #1 Design */
+    :root {
+      /* #1 Hintergrundfarben (Dartboard-Schwarz) */
+      --bg-base:        #080a0c;
+      --bg-panel:       #0e1216;
+      --bg-panel-alt:   #111619;
+      --bg-row-hover:   rgba(0, 200, 80, 0.05);
+
+      /* #1 Akzentfarben (Dartboard: Grün & Rot) */
+      --green:          #00c853;
+      --green-dim:      #00943d;
+      --green-glow:     rgba(0, 200, 83, 0.35);
+      --green-muted:    rgba(0, 200, 83, 0.12);
+      --red:            #e53935;
+      --red-dim:        #b71c1c;
+      --red-glow:       rgba(229, 57, 53, 0.35);
+
+      /*  #1 Gold für Platz 1 */
+      --gold:           #ffc107;
+      --gold-dim:       rgba(255, 193, 7, 0.18);
+
+      /* #1 Neutrale Töne */
+      --text-primary:   #edf2f7;
+      --text-secondary: #7a8a99;
+      --text-muted:     #3a4a57;
+      --border:         rgba(255, 255, 255, 0.07);
+      --border-accent:  rgba(0, 200, 83, 0.25);
+
+      /* #1 Schriftart */
+      --font-display:   'Bebas Neue', sans-serif;   /* große Zahlen */
+      --font-body:      'Rajdhani', sans-serif;     /* alle anderen Texte */
+
+      /*  #1 Layout */
+      --radius:         6px;
+      --radius-lg:      12px;
+      --gap:            20px;
+
+      /* #1 Transition */
+      --transition:     0.25s ease;
+    }
+
+    /*  RESET & BASIS  */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* #1 Hintergrund: tiefes dunkel mit einen subtilen akzent */
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-base);
+      /* #1 SVG-Data-URI für Textur-Tiefe 
+        Bei diesen Schritt wurde zur erläuterung und implementierung Claude verwendet*/
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 28px var(--gap);
+      letter-spacing: 0.01em;
+    }
+
+    /* SCROLLBAR – #1 passend zum dunklen Thema */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 3px; }
+
+    /* SEITEN-WRAPPER & GRID-LAYOUT */
+    .dashboard {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      gap: var(--gap);
+    }
+
+    /*  HEADER – Logo-Zeile mit Dartboard-SVG-Icon */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Dartboard-Icon: inline SVG, Grün/Rot-Ringstruktur */
+    .dartboard-icon {
+      flex-shrink: 0;
+      width: 46px;
+      height: 46px;
+      /* Leichter Glow-Effekt um das Icon */
+      filter: drop-shadow(0 0 8px var(--green-glow));
+    }
+
+    .header-text h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      /* Grün-zu-Weiß Verlauf für den Titel */
+      background: linear-gradient(90deg, var(--green) 0%, var(--text-primary) 60%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em;
+    }
+
+    .header-text p {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Live-Indikator rechts im Header */
+    .header-badge {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    /* Pulsierende rote LED */
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      /* Rot für "live" */
+      background: var(--red);
+      box-shadow: 0 0 6px var(--red-glow);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* PANEL-BASIS – #1 gemeinsames Design für alle Karten */
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      /*  #1 leichter innerer Glow oben */
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      /* #1 Leicht hellerer Streifen als Panel Basis */
+      background: var(--bg-panel-alt);
+    }
+
+    /* Farbakzent-Linie links am Panel-Header */
+    .panel-header::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 18px;
+      border-radius: 2px;
+      background: var(--green);
+      /* Grüner Glow */
+      box-shadow: 0 0 8px var(--green-glow);
+    }
+
+    /* Panel-Titel (Rajdhani bold) */
+    .panel-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    /* Badge neben Panel-Titel (optional) */
+    .panel-badge {
+      margin-left: auto;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-muted);
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border-accent);
+    }
+
+    /* SEKTION 1: LETZTER SCORE – großes Hero-Display */
+    .score-hero {
+      text-align: center;
+      padding: 32px 20px 28px;
+    }
+
+    /* Label oberhalb des Scores */
+    .score-hero-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    /* Die große Score-Zahl – Bebas Neue, grüner Glow */
+    .score-hero-value {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 18vw, 9rem);
+      line-height: 0.9;
+      /* #1 Heller Weiß-Grün-Verlauf für die Zahl */
+      background: linear-gradient(180deg, #ffffff 0%, var(--green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* #1 Leuchtender Glow-Effekt unter der Zahl */
+      filter: drop-shadow(0 0 40px var(--green-glow));
+      transition: var(--transition);
+      /* #1  Einblend-Animation beim Laden */
+      animation: scoreIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes scoreIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Mode-Tag unter dem Score */
+    .score-hero-mode {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-muted);
+      border: 1px solid var(--border-accent);
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+
+    /* Zierlinien links und rechts vom Score-Display (dekorativ) */
+    .score-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 0 auto;
+      max-width: 400px;
+      padding: 0 20px 28px;
+    }
+
+    .score-divider::before,
+    .score-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      /* #1 Verlauf: transparent → Grün → transparent */
+      background: linear-gradient(90deg, transparent, var(--green-dim), transparent);
+    }
+
+    /* Kleines Zielscheiben-Symbol in der Divider-Mitte */
+    .score-divider-icon {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green-glow);
+    }
+
+    /*  SEKTION 2: LETZTE 10 SCORES – kompakte Tabelle */
+    .scores-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .scores-table th {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scores-table td {
+      padding: 11px 20px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .scores-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Hover: #1 grüner Schimmer */
+    .scores-table tbody tr:hover td {
+      background: var(--bg-row-hover);
+      color: var(--text-primary);
+    }
+
+    /* Rang-Spalte: #1 gedämpft */
+    .scores-table td.rank {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      width: 36px;
+    }
+
+    /* Score-Wert:  #1 weiß, größer */
+    .scores-table td.score-val {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      letter-spacing: 0.03em;
+    }
+
+    /* Mode-Tag in der Letzten-Scores-Tabelle */
+    .mode-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* Farb-Varianten der Modes #1 */
+    .mode-tag.mode-501  { color: var(--green);      background: var(--green-muted);    border: 1px solid var(--border-accent); }
+    .mode-tag.mode-301  { color: #64b5f6;            background: rgba(100,181,246,0.1); border: 1px solid rgba(100,181,246,0.25); }
+    .mode-tag.mode-dido { color: var(--gold);        background: var(--gold-dim);       border: 1px solid rgba(255,193,7,0.3); }
+
+    /* Platzhalter-Zeile (leerer Zustand) */
+    .empty-row td {
+      text-align: center;
+      color: var(--text-muted) !important;
+      font-style: italic;
+      font-size: 0.82rem !important;
+      padding: 22px !important;
+    }
+
+    /* SEKTION 3: HIGHSCORE-TABELLEN – 3er-Grid */
+    .highscore-grid {
+      display: grid;
+      /* Responsive: 3 Spalten auf großen Screens, gestapelt auf kleinen */
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--gap);
+    }
+
+    /* Farbakzent-Variante: Blau für 301 */
+    .panel.accent-blue .panel-header::before {
+      background: #64b5f6;
+      box-shadow: 0 0 8px rgba(100, 181, 246, 0.4);
+    }
+
+    /* Farbakzent-Variante: Gold für Double In / Double Out */
+    .panel.accent-gold .panel-header::before {
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
+    }
+
+    /* HIGHSCORE RANG-BADGES #1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! hier weitermachen
+       Platz 1–3 mit krassen Farben; Rest gedämpft */
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* Gold – Platz 1 */
+    .rank-badge.r1 {
+      background: var(--gold-dim);
+      color: var(--gold);
+      border: 1px solid rgba(255,193,7,0.4);
+      box-shadow: 0 0 8px rgba(255,193,7,0.2);
+    }
+
+    /* Silber – Platz 2 */
+    .rank-badge.r2 {
+      background: rgba(176,190,197,0.15);
+      color: #b0bec5;
+      border: 1px solid rgba(176,190,197,0.3);
+    }
+
+    /* Bronze – Platz 3 */
+    .rank-badge.r3 {
+      background: rgba(188,122,72,0.15);
+      color: #bc7a48;
+      border: 1px solid rgba(188,122,72,0.3);
+    }
+
+    /* Platz 4–10: neutral */
+    .rank-badge.rn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* HIGHSCORE SCORE-WERT
+       (gleiche Display-Font, aber farbig je nach Panel-Akzent) */
+    .hs-score {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* Grün-Akzent (501-Tabelle) */
+    .hs-score.c-green { color: var(--green); }
+
+    /* Blau-Akzent (301-Tabelle) */
+    .hs-score.c-blue  { color: #64b5f6; }
+
+    /* Gold-Akzent (DI/DO-Tabelle) */
+    .hs-score.c-gold  { color: var(--gold); }
+
+    /* Platz 1: stärkerer Glow */
+    .scores-table tr:first-child .hs-score.c-green { text-shadow: 0 0 16px var(--green-glow); }
+    .scores-table tr:first-child .hs-score.c-blue  { text-shadow: 0 0 16px rgba(100,181,246,0.4); }
+    .scores-table tr:first-child .hs-score.c-gold  { text-shadow: 0 0 16px rgba(255,193,7,0.35); }
+
+    /* Platz-1-Zeile: minimal hervorgehoben */
+    .scores-table tr.top-row td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    /*  FOOTER */
+    .footer {
+      text-align: center;
+      padding: 16px 0 4px;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /*  RESPONSIVE ANPASSUNGEN */
+    @media (max-width: 600px) {
+      body { padding: 16px 12px; }
+      .score-hero-value { font-size: clamp(4rem, 22vw, 6rem); }
+      .header-badge { display: none; } /* Live-Badge auf Mobile ausblenden */
+    }
+
+    /* LADE-ANIMATION – Staggered Fade-In für Panels */
+    .panel {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .panel:nth-child(1) { animation-delay: 0.05s; }
+    .panel:nth-child(2) { animation-delay: 0.15s; }
+    .panel:nth-child(3) { animation-delay: 0.10s; }
+    .panel:nth-child(4) { animation-delay: 0.20s; }
+    .panel:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- WRAPPER -->
+<div class="dashboard">
+
+  <!-- HEADER -->
+  <header class="header">
+
+    <!-- Dartboard-Icon (inline SVG, stilisiert) -->
+    <svg class="dartboard-icon" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Außenring – Rot -->
+      <circle cx="23" cy="23" r="22" fill="#b71c1c" stroke="#e53935" stroke-width="0.5"/>
+      <!-- Weißer Ring -->
+      <circle cx="23" cy="23" r="18" fill="#1a1a1a" stroke="#444" stroke-width="0.5"/>
+      <!-- Roter Ring -->
+      <circle cx="23" cy="23" r="14" fill="#b71c1c" stroke="#e53935" stroke-width="0.5"/>
+      <!-- Grüner Ring -->
+      <circle cx="23" cy="23" r="10" fill="#1a1a1a" stroke="#444" stroke-width="0.5"/>
+      <!-- Grüner Innenring -->
+      <circle cx="23" cy="23" r="6"  fill="#00943d" stroke="#00c853" stroke-width="0.5"/>
+      <!-- Bull (Rot) -->
+      <circle cx="23" cy="23" r="3"  fill="#e53935"/>
+      <!-- Bullseye -->
+      <circle cx="23" cy="23" r="1.2" fill="#fff"/>
+      <!-- Pfeil-Nadel (dekorativ) -->
+      <line x1="23" y1="0" x2="23" y2="10" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+
+    <div class="header-text">
+      <h1>Dart Dashboard</h1>
+      <p>Score Tracker &amp; Highscores</p>
+    </div>
+
+    <div class="header-badge">
+      <span class="live-dot"></span>
+      Live
+    </div>
+  </header>
+
+
+  <!--  SEKTION 1: LETZTER / AKTUELLER SCORE -->
+  <div class="panel" id="panel-last-score">
+    <div class="panel-header">
+      <span class="panel-title">Aktueller Score</span>
+      <span class="panel-badge" id="last-score-mode-badge">--</span>
+    </div>
+
+    <div class="score-hero">
+      <div class="score-hero-label">Letzter geworfener Score</div>
+
+      <!--
+        ╔══════════════════════════════════════════════╗
+        ║  HIER: Letzten Score eintragen               ║
+        ║  Wert via JS: document.getElementById(       ║
+        ║    'last-score-value').textContent = score;  ║
+        ╚══════════════════════════════════════════════╝
+      -->
+      <div class="score-hero-value" id="last-score-value">--</div>
+
+      <!--
+        HIER: Mode des letzten Scores setzen
+        z.B. setLastScore(142, '501')
+      -->
+      <div class="score-hero-mode" id="last-score-mode">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+          <circle cx="5" cy="5" r="4.5" stroke="currentColor" stroke-width="1"/>
+          <circle cx="5" cy="5" r="2"   fill="currentColor"/>
+        </svg>
+        <span id="last-score-mode-text">Kein Spiel aktiv</span>
+      </div>
+    </div>
+
+    <!-- Dekorative Trennlinie -->
+    <div class="score-divider">
+      <div class="score-divider-icon"></div>
+    </div>
+  </div>
+
+
+  <!-- SEKTION 2: LETZTE 10 SCORES -->
+  <div class="panel" id="panel-recent">
+    <div class="panel-header">
+      <span class="panel-title">Letzte 10 Scores</span>
+    </div>
+
+    <table class="scores-table" id="recent-scores-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Score</th>
+          <th>Modus</th>
+        </tr>
+      </thead>
+      <tbody id="recent-scores-body">
+        <!--
+          ╔══════════════════════════════════════════════════════╗
+          ║  HIER: Array mit letzten 10 Scores befüllen          ║
+          ║                                                      ║
+          ║  Empfohlene Datenstruktur (Array of Objects):        ║
+          ║                                                      ║
+          ║  const recentScores = [                              ║
+          ║    { score: 142, mode: '501'               },        ║
+          ║    { score:  87, mode: 'Double In / Double Out' },   ║
+          ║    { score: 180, mode: '301'               },        ║
+          ║    // ...bis zu 10 Einträge                          ║
+          ║  ];                                                  ║
+          ║                                                      ║
+          ║  renderRecentScores(recentScores);                   ║
+          ╚══════════════════════════════════════════════════════╝
+        -->
+
+        <!-- Platzhalter-Zeile (wird per JS ersetzt) -->
+        <tr class="empty-row">
+          <td colspan="3">Noch keine Scores vorhanden</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- SEKTION 3: HIGHSCORE-TABELLEN (3er-Grid)  -->
+  <div class="highscore-grid">
+
+    <!-- ─── 3a: Top 10 – 501 ─────────────────────────── -->
+    <div class="panel" id="panel-hs-501">
+      <div class="panel-header">
+        <!-- Grüner Akzent (Standard) -->
+        <span class="panel-title">Top 10 &ndash; 501</span>
+      </div>
+      <table class="scores-table" id="hs-501-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="hs-501-body">
+          <!--
+            ╔═══════════════════════════════════════════════╗
+            ║  HIER: Highscore-Array für 501 befüllen       ║
+            ║                                               ║
+            ║  const highscores501 = [                      ║
+            ║    { score: 180 },                            ║
+            ║    { score: 171 },                            ║
+            ║    // ... bis zu 10 Einträge                  ║
+            ║  ];                                           ║
+            ║                                               ║
+            ║  renderHighscores('hs-501-body',              ║
+            ║    highscores501, 'c-green');                 ║
+            ╚═══════════════════════════════════════════════╝
+          -->
+          <tr class="empty-row">
+            <td colspan="2">Keine Einträge</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── 3b: Top 10 – 301 ─────────────────────────── -->
+    <div class="panel accent-blue" id="panel-hs-301">
+      <!-- Blauer Akzent via accent-blue Klasse -->
+      <div class="panel-header">
+        <span class="panel-title">Top 10 &ndash; 301</span>
+      </div>
+      <table class="scores-table" id="hs-301-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="hs-301-body">
+          <!--
+            ╔═══════════════════════════════════════════════╗
+            ║  HIER: Highscore-Array für 301 befüllen       ║
+            ║                                               ║
+            ║  const highscores301 = [                      ║
+            ║    { score: 180 },                            ║
+            ║    // ... bis zu 10 Einträge                  ║
+            ║  ];                                           ║
+            ║                                               ║
+            ║  renderHighscores('hs-301-body',              ║
+            ║    highscores301, 'c-blue');                  ║
+            ╚═══════════════════════════════════════════════╝
+          -->
+          <tr class="empty-row">
+            <td colspan="2">Keine Einträge</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── 3c: Top 10 – Double In / Double Out ──────── -->
+    <div class="panel accent-gold" id="panel-hs-dido">
+      <!-- Goldener Akzent via accent-gold Klasse -->
+      <div class="panel-header">
+        <span class="panel-title">Top 10 &ndash; Double In / Double Out</span>
+      </div>
+      <table class="scores-table" id="hs-dido-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="hs-dido-body">
+          <!--
+            ╔═══════════════════════════════════════════════════╗
+            ║  HIER: Highscore-Array für Double In/Out befüllen ║
+            ║                                                   ║
+            ║  const highscoresDiDo = [                         ║
+            ║    { score: 180 },                                ║
+            ║    // ... bis zu 10 Einträge                      ║
+            ║  ];                                               ║
+            ║                                                   ║
+            ║  renderHighscores('hs-dido-body',                 ║
+            ║    highscoresDiDo, 'c-gold');                     ║
+            ╚═══════════════════════════════════════════════════╝
+          -->
+          <tr class="empty-row">
+            <td colspan="2">Keine Einträge</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /highscore-grid -->
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    Dart Score Dashboard &mdash; Alle Daten sind Platzhalter &mdash;
+    <span id="footer-ts"></span>
+  </footer>
+
+</div><!-- /dashboard -->
+
+
+<!--
+     JAVASCRIPT
+     ─────────────────────────────────────────────────────
+     EMPFOHLENE DATENSTRUKTUR FÜR DIE INTEGRATION:
+
+     Alle Scores werden als Array of Objects gespeichert:
+
+     {
+       score : number,          // geworfener Score (0–180)
+       mode  : '501'            // '301' | 'Double In / Double Out'
+     }
+
+     Highscores sind sortierte Arrays (absteigend):
+     [{ score: 180 }, { score: 171 }, ...]
+
+     Befüllung via Tracker-System z.B.:
+       fetch('/api/dart/last-score')
+         .then(r => r.json())
+         .then(data => setLastScore(data.score, data.mode));
+
+       fetch('/api/dart/recent?limit=10')
+         .then(r => r.json())
+         .then(data => renderRecentScores(data));
+
+       fetch('/api/dart/highscores?mode=501&limit=10')
+         .then(r => r.json())
+         .then(data => renderHighscores('hs-501-body', data, 'c-green'));
+    -->
+<script>
+  'use strict';
+
+  /*
+     KONFIGURATION
+     Modus -> Anzeige-Label und CSS-Klasse
+     */
+  const MODE_CONFIG = {
+    '501':                   { label: '501',                   cls: 'mode-501'  },
+    '301':                   { label: '301',                   cls: 'mode-301'  },
+    'Double In / Double Out': { label: 'Double In / Double Out', cls: 'mode-dido' },
+  };
+
+  /*  setLastScore(score, mode)
+     Trägt den letzten/aktuellen Score in die Hero-Anzeige ein.
+
+     INTEGRATION:
+       HIER: Letzten Score eintragen
+       Aufruf z.B.: setLastScore(142, '501') */
+  function setLastScore(score, mode) {
+    try {
+      const valEl  = document.getElementById('last-score-value');
+      const modeEl = document.getElementById('last-score-mode-text');
+      const badge  = document.getElementById('last-score-mode-badge');
+
+      if (score === null || score === undefined) {
+        valEl.textContent  = '--';
+        modeEl.textContent = 'Kein Spiel aktiv';
+        badge.textContent  = '--';
+        return;
+      }
+
+      valEl.textContent  = score;
+      const cfg = MODE_CONFIG[mode] || { label: mode || '--', cls: '' };
+      modeEl.textContent = cfg.label;
+      badge.textContent  = cfg.label;
+
+      /* Kurze Highlight-Animation bei neuem Score */
+      valEl.style.animation = 'none';
+      void valEl.offsetWidth; /* Reflow erzwingen */
+      valEl.style.animation = 'scoreIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both';
+    } catch (e) {
+      console.error('[Dart Dashboard] setLastScore Fehler:', e);
+    }
+  }
+
+  /* renderRecentScores(scoresArray)
+     Befüllt die "Letzte 10 Scores"-Tabelle.
+
+     INTEGRATION:
+       HIER: Array mit letzten 10 Scores befüllen
+       Erwartet: Array of Objects [{ score: 142, mode: '501' }, ...]
+       Aufruf: renderRecentScores(recentScores) */
+  function renderRecentScores(scores) {
+    try {
+      const tbody = document.getElementById('recent-scores-body');
+      tbody.innerHTML = '';
+
+      if (!Array.isArray(scores) || scores.length === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="3">Noch keine Scores vorhanden</td></tr>';
+        return;
+      }
+
+      scores.slice(0, 10).forEach((entry, idx) => {
+        const cfg = MODE_CONFIG[entry.mode] || { label: entry.mode || '--', cls: '' };
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="rank">${idx + 1}</td>
+          <td class="score-val">${entry.score ?? '--'}</td>
+          <td><span class="mode-tag ${cfg.cls}">${cfg.label}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (e) {
+      console.error('[Dart Dashboard] renderRecentScores Fehler:', e);
+    }
+  }
+
+  /*  renderHighscores(tbodyId, scoresArray, colorClass)
+     Befüllt eine der drei Highscore-Tabellen.
+
+     INTEGRATION:
+       HIER: Highscore-Array für 501 befüllen:
+         renderHighscores('hs-501-body', highscores501, 'c-green')
+       HIER: Highscore-Array für 301 befüllen:
+         renderHighscores('hs-301-body', highscores301, 'c-blue')
+       HIER: Highscore-Array für Double In/Out befüllen:
+         renderHighscores('hs-dido-body', highscoresDiDo, 'c-gold')
+
+     @param {string}   tbodyId     – ID des <tbody>-Elements
+     @param {Array}    scores      – [{ score: 180 }, ...]  (absteigend sortiert)
+     @param {string}   colorClass  – 'c-green' | 'c-blue' | 'c-gold' */
+
+  function renderHighscores(tbodyId, scores, colorClass) {
+    try {
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) throw new Error(`tbody #${tbodyId} nicht gefunden`);
+      tbody.innerHTML = '';
+
+      if (!Array.isArray(scores) || scores.length === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="2">Keine Einträge</td></tr>';
+        return;
+      }
+
+      scores.slice(0, 10).forEach((entry, idx) => {
+        const rank     = idx + 1;
+        const rankCls  = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : 'rn';
+        const rowCls   = rank === 1 ? 'top-row' : '';
+
+        const tr = document.createElement('tr');
+        tr.className = rowCls;
+        tr.innerHTML = `
+          <td><span class="rank-badge ${rankCls}">${rank}</span></td>
+          <td><span class="hs-score ${colorClass}">${entry.score ?? '--'}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (e) {
+      console.error('[Dart Dashboard] renderHighscores Fehler:', e);
+    }
+  }
+
+  /* INITIALISIERUNG
+     Platzhalter-Daten einsetzen.
+     Diesen Block durch echte API-Aufrufe ersetzen. */
+     
+  (function init() {
+    try {
+      /* HIER: Letzten Score eintragen – aktuell leer */
+      setLastScore(null, null);
+
+      /* HIER: Array mit letzten 10 Scores befüllen – aktuell leer */
+      renderRecentScores([]);
+
+      /* HIER: Highscore-Array für 501 befüllen – aktuell leer */
+      renderHighscores('hs-501-body', [], 'c-green');
+
+      /* HIER: Highscore-Array für 301 befüllen – aktuell leer */
+      renderHighscores('hs-301-body', [], 'c-blue');
+
+      /* HIER: Highscore-Array für Double In / Double Out befüllen – aktuell leer */
+      renderHighscores('hs-dido-body', [], 'c-gold');
+
+      /* Timestamp im Footer */
+      const ts = document.getElementById('footer-ts');
+      if (ts) {
+        ts.textContent = 'Stand: ' + new Date().toLocaleString('de-DE', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+      }
+    } catch (e) {
+      console.error('[Dart Dashboard] Initialisierungsfehler:', e);
+    }
+  })();
+
+  /* =====================================================
+     DEMO-DATEN – zum Testen auskommentieren/einkommentieren (claude)  Wird naher aus den Code entfernt
+     =====================================================
+  setLastScore(142, '501');
+
+  renderRecentScores([
+    { score: 142, mode: '501'                    },
+    { score:  87, mode: 'Double In / Double Out'  },
+    { score: 180, mode: '301'                    },
+    { score:  60, mode: '501'                    },
+    { score: 121, mode: 'Double In / Double Out'  },
+    { score: 100, mode: '301'                    },
+    { score:  45, mode: '501'                    },
+    { score:  76, mode: '301'                    },
+    { score: 137, mode: 'Double In / Double Out'  },
+    { score:  26, mode: '501'                    },
+  ]);
+
+  renderHighscores('hs-501-body', [
+    { score: 180 }, { score: 171 }, { score: 160 },
+    { score: 157 }, { score: 140 }, { score: 135 },
+    { score: 121 }, { score: 100 }, { score:  96 }, { score:  81 },
+  ], 'c-green');
+
+  renderHighscores('hs-301-body', [
+    { score: 180 }, { score: 167 }, { score: 155 },
+    { score: 140 }, { score: 125 }, { score: 110 },
+    { score: 100 }, { score:  85 }, { score:  70 }, { score:  60 },
+  ], 'c-blue');
+
+  renderHighscores('hs-dido-body', [
+    { score: 180 }, { score: 162 }, { score: 148 },
+    { score: 131 }, { score: 120 }, { score: 107 },
+    { score:  96 }, { score:  80 }, { score:  65 }, { score:  50 },
+  ], 'c-gold');
+  */
+</script>
+
+</body>
+</html>
