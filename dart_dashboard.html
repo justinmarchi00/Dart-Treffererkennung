@@ -386,7 +386,7 @@
       box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
     }
 
-    /* HIGHSCORE RANG-BADGES #1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! hier weitermachen
+    /* HIGHSCORE RANG-BADGES #1 
        Platz 1–3 mit krassen Farben; Rest gedämpft */
     .rank-badge {
       display: inline-flex;
@@ -399,7 +399,7 @@
       font-weight: 700;
     }
 
-    /* Gold – Platz 1 */
+    /* Gold – Platz 1 #2*/
     .rank-badge.r1 {
       background: var(--gold-dim);
       color: var(--gold);
@@ -407,21 +407,21 @@
       box-shadow: 0 0 8px rgba(255,193,7,0.2);
     }
 
-    /* Silber – Platz 2 */
+      /* Silber – Platz 2 #2*/
     .rank-badge.r2 {
       background: rgba(176,190,197,0.15);
       color: #b0bec5;
       border: 1px solid rgba(176,190,197,0.3);
     }
 
-    /* Bronze – Platz 3 */
+      /* Bronze – Platz 3 #2*/
     .rank-badge.r3 {
       background: rgba(188,122,72,0.15);
       color: #bc7a48;
       border: 1px solid rgba(188,122,72,0.3);
     }
 
-    /* Platz 4–10: neutral */
+    /* Platz 4–10: neutral #2*/
     .rank-badge.rn {
       background: transparent;
       color: var(--text-muted);
@@ -436,21 +436,21 @@
       letter-spacing: 0.02em;
     }
 
-    /* Grün-Akzent (501-Tabelle) */
+    /* Grün-Akzent (501-Tabelle) #2*/
     .hs-score.c-green { color: var(--green); }
 
-    /* Blau-Akzent (301-Tabelle) */
+    /* Blau-Akzent (301-Tabelle) #2*/
     .hs-score.c-blue  { color: #64b5f6; }
 
-    /* Gold-Akzent (DI/DO-Tabelle) */
+    /* Gold-Akzent (DI/DO-Tabelle) #2*/
     .hs-score.c-gold  { color: var(--gold); }
 
-    /* Platz 1: stärkerer Glow */
+    /* Platz 1: stärkerer Glow #2*/
     .scores-table tr:first-child .hs-score.c-green { text-shadow: 0 0 16px var(--green-glow); }
     .scores-table tr:first-child .hs-score.c-blue  { text-shadow: 0 0 16px rgba(100,181,246,0.4); }
     .scores-table tr:first-child .hs-score.c-gold  { text-shadow: 0 0 16px rgba(255,193,7,0.35); }
 
-    /* Platz-1-Zeile: minimal hervorgehoben */
+    /* Platz-1-Zeile: minimal hervorgehoben #2 */
     .scores-table tr.top-row td {
       background: rgba(255,255,255,0.02);
     }
@@ -498,29 +498,31 @@
   <!-- HEADER -->
   <header class="header">
 
-    <!-- Dartboard-Icon (inline SVG, stilisiert) -->
+    <!-- Dartboard-Icon (inline SVG, stilisiert) #2 -->
     <svg class="dartboard-icon" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <!-- Außenring – Rot -->
+      <!-- Außenring – Rot #2-->
       <circle cx="23" cy="23" r="22" fill="#b71c1c" stroke="#e53935" stroke-width="0.5"/>
-      <!-- Weißer Ring -->
+      <!-- Weißer Ring #2-->
       <circle cx="23" cy="23" r="18" fill="#1a1a1a" stroke="#444" stroke-width="0.5"/>
-      <!-- Roter Ring -->
+      <!-- Roter Ring #2-->
       <circle cx="23" cy="23" r="14" fill="#b71c1c" stroke="#e53935" stroke-width="0.5"/>
-      <!-- Grüner Ring -->
+      <!-- Grüner Ring #2-->
       <circle cx="23" cy="23" r="10" fill="#1a1a1a" stroke="#444" stroke-width="0.5"/>
-      <!-- Grüner Innenring -->
+      <!-- Grüner Innenring #2-->
       <circle cx="23" cy="23" r="6"  fill="#00943d" stroke="#00c853" stroke-width="0.5"/>
-      <!-- Bull (Rot) -->
+      <!-- Bull (Rot) #2-->
       <circle cx="23" cy="23" r="3"  fill="#e53935"/>
-      <!-- Bullseye -->
+      <!-- Bullseye #2-->
       <circle cx="23" cy="23" r="1.2" fill="#fff"/>
-      <!-- Pfeil-Nadel (dekorativ) -->
+      <!-- Pfeil-Nadel (dekorativ) #2-->
       <line x1="23" y1="0" x2="23" y2="10" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
     </svg>
 
+     <!-- Titel und gruppenerkennung #2 --> 
     <div class="header-text">
       <h1>Dart Dashboard</h1>
       <p>Score Tracker &amp; Highscores</p>
+      <p>Made by the JPLC Group</p>
     </div>
 
     <div class="header-badge">
@@ -530,7 +532,7 @@
   </header>
 
 
-  <!--  SEKTION 1: LETZTER / AKTUELLER SCORE -->
+  <!--  SEKTION 1: LETZTER / AKTUELLER SCORE #2-->
   <div class="panel" id="panel-last-score">
     <div class="panel-header">
       <span class="panel-title">Aktueller Score</span>
@@ -538,7 +540,7 @@
     </div>
 
     <div class="score-hero">
-      <div class="score-hero-label">Letzter geworfener Score</div>
+      <div class="score-hero-label">Last Score</div>
 
       <!--
         ╔══════════════════════════════════════════════╗
@@ -650,7 +652,7 @@
 
     <!-- ─── 3b: Top 10 – 301 ─────────────────────────── -->
     <div class="panel accent-blue" id="panel-hs-301">
-      <!-- Blauer Akzent via accent-blue Klasse -->
+      <!-- Blauer Akzent via accent-blue Klasse #2 -->
       <div class="panel-header">
         <span class="panel-title">Top 10 &ndash; 301</span>
       </div>
@@ -684,7 +686,7 @@
 
     <!-- ─── 3c: Top 10 – Double In / Double Out ──────── -->
     <div class="panel accent-gold" id="panel-hs-dido">
-      <!-- Goldener Akzent via accent-gold Klasse -->
+      <!-- Goldener Akzent via accent-gold Klasse  #2-->
       <div class="panel-header">
         <span class="panel-title">Top 10 &ndash; Double In / Double Out</span>
       </div>
@@ -721,7 +723,7 @@
 
   <!-- FOOTER -->
   <footer class="footer">
-    Dart Score Dashboard &mdash; Alle Daten sind Platzhalter &mdash;
+    Dart Score Dashboard &mdash; Made by the JPLC Group &mdash;
     <span id="footer-ts"></span>
   </footer>
 
@@ -793,7 +795,8 @@
       modeEl.textContent = cfg.label;
       badge.textContent  = cfg.label;
 
-      /* Kurze Highlight-Animation bei neuem Score */
+      /* Kurze Highlight-Animation bei neuem Score #2*/
+      /* zum hilfe wurde hier claude verwendet, da die animation nicht immer getriggert wurde */
       valEl.style.animation = 'none';
       void valEl.offsetWidth; /* Reflow erzwingen */
       valEl.style.animation = 'scoreIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both';
