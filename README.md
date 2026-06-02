@@ -1,4 +1,3 @@
-
 # 🎯 Automatisiertes Dart-Scoring-System
 
 ## 📌 Projektbeschreibung
@@ -125,6 +124,15 @@ Ein funktionierendes System, das:
 
 *Quelle: https://i.etsystatic.com/58075119/r/il/a46dd5/7300756379/il_1588xN.7300756379_7i1j.jpg*
 ---
+
+
+## Bilder vom 3D-Druck
+
+<img width="768" height="1024" alt="323033FD-1292-4B2C-9FC0-E6FA3B946680_1_105_c" src="https://github.com/user-attachments/assets/edfa5c91-8a8e-4359-9e19-bc8c76d06821" /><img width="768" height="1024" alt="6D8AF519-F548-4133-8493-95B29EE4C09D_1_105_c" src="https://github.com/user-attachments/assets/5cb19155-b29e-4578-a432-52a6d8358f59" /><img width="768" height="1024" alt="6D8AF519-F548-4133-8493-95B29EE4C09D_1_105_c" src="https://github.com/user-attachments/assets/a14b1873-5cc8-498c-a897-1a50ad1a51cf" />![Uploading 323033FD-<img width="768" height="1024" alt="2787396C-01C3-4B20-BD47-C93E1F08359A_1_105_c" src="https://github.com/user-attachments/assets/a500364a-ea31-4f8a-a509-204f3a9037d4" />
+1292-4B2C-9FC0-E6FA3B946680_1_105_c.jpeg…]()
+<img width="768" height="1024" alt="DD6F4A32-9B25-4479-8145-BB8CA59A4E09_1_105_c" src="https://github.com/user-attachments/assets/0999a07a-1a68-4ebc-a6ea-73177fc49e76" />
+<img width="768" height="1024" alt="DAD65EB5-A7B7-4D04-B31F-C83C963C70C9_1_105_c" src="https://github.com/user-attachments/assets/3f414325-9621-4be7-8108-22cc8afc72c7" />
+
 
 ## Bilder Frontend
 <img width="1280" height="832" alt="PHOTO-2026-06-02-15-19-32" src="https://github.com/user-attachments/assets/478b675e-a360-45ca-a12c-630fb947333f" />
