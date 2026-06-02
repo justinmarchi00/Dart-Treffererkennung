@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { calculateScore, nextPlayer } from './utils/dartLogic'
 import { checkouts } from './data/checkouts'
 
@@ -23,6 +23,9 @@ export default function App() {
 
   const [lastHit, setLastHit] = useState('-')
 
+  const [sensorConnected, setSensorConnected] = useState(false)
+const [sensorMessage, setSensorMessage] = useState('Warte auf Sensor...')
+
   // MATCH
 
   const [legs, setLegs] = useState({})
@@ -34,6 +37,45 @@ export default function App() {
   const [history, setHistory] = useState([])
 
   // OPENCV READY
+
+  useEffect(() => {
+
+  const interval = setInterval(() => {
+
+    fetch('http://127.0.0.1:5050/status')
+      .then(res => res.json())
+      .then(data => {
+
+        if (!data.message) return
+
+        setSensorConnected(true)
+
+        setSensorMessage(data.message)
+
+        // SENSOR ERKANNT
+
+        if (
+          data.message === 'Schalter aktiviert' ||
+          data.message === 'DART_HIT'
+        ) {
+
+          receiveOpenCVHit('T20')
+
+        }
+
+      })
+      .catch(() => {
+
+        setSensorConnected(false)
+
+      })
+
+  }, 300)
+
+  return () => clearInterval(interval)
+
+}, [])
+  
 
   function receiveOpenCVHit(hit) {
 
@@ -468,6 +510,10 @@ export default function App() {
                 <p className="text-sm text-zinc-500 mt-1">
                   OpenCV Verbindung vorbereitet
                 </p>
+                
+                <p className="text-sm text-green-400 mt-2">
+                  {sensorMessage}
+                </p>
 
               </div>
 
@@ -475,9 +521,13 @@ export default function App() {
 
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
 
-                <span className="text-sm text-zinc-500">
-                  Bereit
-                </span>
+              <span className={`text-sm ${
+                sensorConnected
+                  ? 'text-green-400'
+                  : 'text-red-400'
+              }`}>
+                {sensorConnected ? 'Sensor verbunden' : 'Kein Sensor'}
+              </span>
 
               </div>
 
@@ -737,5 +787,10 @@ export default function App() {
       </div>
 
     </div>
+
+
+
   )
+
+  
 }
