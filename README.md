@@ -1,3 +1,4 @@
+
 # 🎯 Automatisiertes Dart-Scoring-System
 
 ## 📌 Projektbeschreibung
@@ -125,7 +126,8 @@ Ein funktionierendes System, das:
 *Quelle: https://i.etsystatic.com/58075119/r/il/a46dd5/7300756379/il_1588xN.7300756379_7i1j.jpg*
 ---
 
-
+## Bilder Frontend
+<img width="1280" height="832" alt="PHOTO-2026-06-02-15-19-32" src="https://github.com/user-attachments/assets/478b675e-a360-45ca-a12c-630fb947333f" />
 # Kosten Kalkulation
 
 | Pos. | Bezeichnung | Beschreibung | Link | Anzahl | Preis | Gesamt |
