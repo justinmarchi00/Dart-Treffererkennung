@@ -152,7 +152,7 @@ Ein funktionierendes System, das:
 ---
 
 
-# Kosten Kalkulation
+## Kostenkalkulation
 
 | Pos. | Bezeichnung | Beschreibung | Link | Anzahl | Preis | Gesamt |
 |------|-------------|--------------|------|--------|-------|---------|
@@ -174,7 +174,7 @@ Ein funktionierendes System, das:
 
 ---
 
-## Gesamt
+## Gesamtkosten
 
 **164,09 €**
 
