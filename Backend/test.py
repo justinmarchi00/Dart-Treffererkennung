@@ -1,108 +1,169 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response, request
 from flask_cors import CORS
-
-import serial
-import serial.tools.list_ports
-
-import threading
-import time
+import cv2
 
 app = Flask(__name__)
 CORS(app)
 
-# AUTOMATISCHEN ARDUINO PORT FINDEN
+# =====================================
+# KAMERAS
+# =====================================
 
-arduino_port = None
+cam1 = cv2.VideoCapture(0)
+cam2 = cv2.VideoCapture(1)
+cam3 = cv2.VideoCapture(2)
 
-ports = serial.tools.list_ports.comports()
+for cam in [cam1, cam2, cam3]:
 
-for port in ports:
+    cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    print("Gefundener Port:", port.device)
+    cam.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+    
+print("Cam1:", cam1.isOpened())
+print("Cam2:", cam2.isOpened())
+print("Cam3:", cam3.isOpened())
 
-    if "usbmodem" in port.device or "usbserial" in port.device:
+# =====================================
+# KALIBRIERUNG
+# =====================================
 
-        arduino_port = port.device
-        break
+calibration = {
+    "center_x": None,
+    "center_y": None,
+    "radius": None
+}
 
-if not arduino_port:
+# =====================================
+# MJPEG STREAM
+# =====================================
 
-    raise Exception("Kein Arduino gefunden!")
-
-print("Arduino verbunden auf:", arduino_port)
-
-# ARDUINO VERBINDUNG
-
-arduino = serial.Serial(arduino_port, 9600)
-
-time.sleep(2)
-
-# STATUS
-
-current_status = "Warte auf Sensor..."
-
-# SERIELLE DATEN LESEN
-
-def read_serial():
-
-    global current_status
+def generate(camera):
 
     while True:
 
-        try:
+        success, frame = camera.read()
 
-            line = arduino.readline().decode().strip()
+        if not success:
+            continue
 
-            if not line:
-                continue
+        ret, buffer = cv2.imencode('.jpg', frame)
 
-            print("Arduino:", line)
+        if not ret:
+            continue
 
-            # STATUS ÄNDERN
+        frame_bytes = buffer.tobytes()
 
-            if line == "SWITCH_ON":
+        yield (
+            b'--frame\r\n'
+            b'Content-Type: image/jpeg\r\n\r\n' +
+            frame_bytes +
+            b'\r\n'
+        )
 
-                current_status = "Sensor erkannt"
-
-            elif line == "SWITCH_OFF":
-
-                current_status = "Sensor bereit"
-
-            elif line == "DART_HIT":
-
-                current_status = "Dart erkannt"
-
-            else:
-
-                current_status = line
-
-        except Exception as e:
-
-            print("Fehler:", e)
-
-# THREAD STARTEN
-
-thread = threading.Thread(target=read_serial)
-
-thread.daemon = True
-
-thread.start()
-
-# API
+# =====================================
+# STATUS
+# =====================================
 
 @app.route('/status')
-
 def status():
 
     return jsonify({
-
-        'message': current_status
-
+        "message": "Backend verbunden"
     })
 
-# SERVER STARTEN
+# =====================================
+# KAMERA STATUS
+# =====================================
 
-app.run(
-    host='0.0.0.0',
-    port=5050
-)
+@app.route('/cameras')
+def cameras():
+
+    return jsonify({
+        "cam1": cam1.isOpened(),
+        "cam2": cam2.isOpened(),
+        "cam3": cam3.isOpened()
+    })
+
+# =====================================
+# LIVE STREAMS
+# =====================================
+
+@app.route('/camera/1')
+def camera1():
+
+    return Response(
+        generate(cam1),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
+
+@app.route('/camera/2')
+def camera2():
+
+    return Response(
+        generate(cam2),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
+
+@app.route('/camera/3')
+def camera3():
+
+    return Response(
+        generate(cam3),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
+
+# =====================================
+# KALIBRIERUNG SPEICHERN
+# =====================================
+
+@app.route('/calibrate', methods=['POST'])
+def calibrate():
+
+    global calibration
+
+    data = request.json
+
+    calibration["center_x"] = data.get("center_x")
+    calibration["center_y"] = data.get("center_y")
+    calibration["radius"] = data.get("radius")
+
+    print("Kalibrierung gespeichert:")
+    print(calibration)
+
+    return jsonify({
+        "success": True,
+        "calibration": calibration
+    })
+
+# =====================================
+# KALIBRIERUNG AUSLESEN
+# =====================================
+
+@app.route('/calibration')
+def get_calibration():
+
+    return jsonify(calibration)
+
+# =====================================
+# SPÄTERE DART ERKENNUNG
+# =====================================
+
+@app.route('/detect')
+def detect():
+
+    return jsonify({
+        "status": "noch nicht implementiert"
+    })
+
+# =====================================
+# START
+# =====================================
+
+if __name__ == "__main__":
+
+    app.run(
+        host="0.0.0.0",
+        port=5050,
+        threaded=True
+    )

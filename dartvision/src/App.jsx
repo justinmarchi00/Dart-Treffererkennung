@@ -549,30 +549,35 @@ const [sensorMessage, setSensorMessage] = useState('Warte auf Sensor...')
 
             {/* CAMERAS */}
 
-            <div className="grid grid-cols-3 gap-3">
+{/* CAMERAS */}
 
-              {[1, 2, 3].map(cam => (
+<div className="grid grid-cols-3 gap-3">
 
-                <div
-                  key={cam}
-                  className="bg-[#181818] rounded-[18px] p-4"
-                >
+  <div className="bg-[#181818] rounded-[18px] overflow-hidden">
+    <img
+      src="http://127.0.0.1:5050/camera/1"
+      alt="Kamera 1"
+      className="w-full h-[220px] object-cover"
+    />
+  </div>
 
-                  <div className="flex items-center justify-between">
+  <div className="bg-[#181818] rounded-[18px] overflow-hidden">
+    <img
+      src="http://127.0.0.1:5050/camera/2"
+      alt="Kamera 2"
+      className="w-full h-[220px] object-cover"
+    />
+  </div>
 
-                    <span className="text-sm text-zinc-400">
-                      Kamera {cam}
-                    </span>
+  <div className="bg-[#181818] rounded-[18px] overflow-hidden">
+    <img
+      src="http://127.0.0.1:5050/camera/3"
+      alt="Kamera 3"
+      className="w-full h-[220px] object-cover"
+    />
+  </div>
 
-                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-
-                  </div>
-
-                </div>
-
-              ))}
-
-            </div>
+</div>
 
           </div>
 

@@ -1,28 +1,40 @@
 import cv2
-import numpy as np
 
-# Schwarzes Bild erzeugen
-img = np.zeros((500, 500, 3), dtype=np.uint8)
+# Liste aller Kamera-Indizes, die geöffnet werden sollen
+camera_indices = [0, 1, 2]
+cameras = []
 
-# Kreis zeichnen
-cv2.circle(img, (250, 250), 100, (0, 255, 330), 5)
+# Kameras initialisieren und prüfen, welche verfügbar sind
+for index in camera_indices:
+    cap = cv2.VideoCapture(index)
+    if cap.isOpened():
+        cameras.append((index, cap))
+        print(f"Kamera {index} erfolgreich gestartet.")
+    else:
+        cap.release()
+        print(f"Kamera {index} ist nicht verfügbar.")
 
-# Text schreiben
-cv2.putText(
-    img,
-    "OpenCV funktioniert!",
-    (70, 450),
-    cv2.FONT_HERSHEY_SIMPLEX,
-    1,
-    (255, 244, 255),
-    2
-)
+# Falls überhaupt keine Kamera gefunden wurde, das Skript beenden
+if not cameras:
+    print("Error: Keine funktionierenden Kameras gefunden.")
+    exit()
 
-# Fenster anzeigen
-cv2.imshow("Test", img)
+while True:
+    for index, cap in cameras:
+        ret, frame = cap.read()
+        
+        if ret:
+            # Zeigt jede Kamera in einem eigenen Fenster an
+            cv2.imshow(f'Kamera Feed {index}', frame)
+        else:
+            print(f"Fehler beim Lesen von Kamera {index}.")
 
-# Warten bis Taste gedrückt wird
-cv2.waitKey(0)
+    # Drücken Sie 'q', um alle Feeds zu schließen
+    if cv2.waitKey(1) == ord('q'):
+        break
 
-# Fenster schließen
+# Alle aktiven Kamera-Ressourcen freigeben
+for index, cap in cameras:
+    cap.release()
+
 cv2.destroyAllWindows()
