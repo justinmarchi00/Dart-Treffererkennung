@@ -123,6 +123,7 @@ Ein funktionierendes System, das:
 <img width="1588" height="2117" alt="Image" src="https://github.com/user-attachments/assets/1ea0431b-4e36-47dc-8f1a-193951b64fb5" />
 
 *Quelle: https://i.etsystatic.com/58075119/r/il/a46dd5/7300756379/il_1588xN.7300756379_7i1j.jpg*
+
 ---
 
 
@@ -134,17 +135,20 @@ Ein funktionierendes System, das:
 <img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 18" src="https://github.com/user-attachments/assets/6c67721d-2905-4dfd-908a-9bfb3f607e3d" />
 <img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19" src="https://github.com/user-attachments/assets/c927e4f8-d504-437b-83c4-0746c9e8bd7d" />
 <img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (1)" src="https://github.com/user-attachments/assets/d4dd9126-2ca8-4946-a73b-bdf51dda86bf" />
+
 ---
 
 
 ## Bilder Frontend
 <img width="1280" height="832" alt="PHOTO-2026-06-02-15-19-32" src="https://github.com/user-attachments/assets/478b675e-a360-45ca-a12c-630fb947333f" />
+
 ---
 
 
 ## Bilder Dartscheibe + fertiger Rahmen
 <img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (2)" src="https://github.com/user-attachments/assets/5b38bdf0-b938-4e89-a9d5-0b7fdaa132e6" />
 <img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (3)" src="https://github.com/user-attachments/assets/f4042235-ea1a-42ac-93c7-3dec0b16515f" />
+
 ---
 
 
