@@ -126,19 +126,27 @@ Ein funktionierendes System, das:
 ---
 
 
-## Bilder vom 3D-Druck
+## Bilder vom 3D-Druck (Rahmen)
 
 <img width="768" height="1024" alt="323033FD-1292-4B2C-9FC0-E6FA3B946680_1_105_c" src="https://github.com/user-attachments/assets/edfa5c91-8a8e-4359-9e19-bc8c76d06821" /><img width="768" height="1024" alt="6D8AF519-F548-4133-8493-95B29EE4C09D_1_105_c" src="https://github.com/user-attachments/assets/5cb19155-b29e-4578-a432-52a6d8358f59" /><img width="768" height="1024" alt="6D8AF519-F548-4133-8493-95B29EE4C09D_1_105_c" src="https://github.com/user-attachments/assets/a14b1873-5cc8-498c-a897-1a50ad1a51cf" />
 <img width="768" height="1024" alt="DD6F4A32-9B25-4479-8145-BB8CA59A4E09_1_105_c" src="https://github.com/user-attachments/assets/0999a07a-1a68-4ebc-a6ea-73177fc49e76" />
 <img width="768" height="1024" alt="DAD65EB5-A7B7-4D04-B31F-C83C963C70C9_1_105_c" src="https://github.com/user-attachments/assets/3f414325-9621-4be7-8108-22cc8afc72c7" />
+<img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 18" src="https://github.com/user-attachments/assets/6c67721d-2905-4dfd-908a-9bfb3f607e3d" />
+<img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19" src="https://github.com/user-attachments/assets/c927e4f8-d504-437b-83c4-0746c9e8bd7d" />
+<img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (1)" src="https://github.com/user-attachments/assets/d4dd9126-2ca8-4946-a73b-bdf51dda86bf" />
+---
 
 
 ## Bilder Frontend
 <img width="1280" height="832" alt="PHOTO-2026-06-02-15-19-32" src="https://github.com/user-attachments/assets/478b675e-a360-45ca-a12c-630fb947333f" />
+---
+
 
 ## Bilder Dartscheibe + fertiger Rahmen
 <img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (2)" src="https://github.com/user-attachments/assets/5b38bdf0-b938-4e89-a9d5-0b7fdaa132e6" />
 <img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (3)" src="https://github.com/user-attachments/assets/f4042235-ea1a-42ac-93c7-3dec0b16515f" />
+---
+
 
 # Kosten Kalkulation
 
