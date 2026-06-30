@@ -135,6 +135,11 @@ Ein funktionierendes System, das:
 
 ## Bilder Frontend
 <img width="1280" height="832" alt="PHOTO-2026-06-02-15-19-32" src="https://github.com/user-attachments/assets/478b675e-a360-45ca-a12c-630fb947333f" />
+
+## Bilder Dartscheibe + fertiger Rahmen
+<img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (2)" src="https://github.com/user-attachments/assets/5b38bdf0-b938-4e89-a9d5-0b7fdaa132e6" />
+<img width="1200" height="1600" alt="WhatsApp Image 2026-06-30 at 14 43 19 (3)" src="https://github.com/user-attachments/assets/f4042235-ea1a-42ac-93c7-3dec0b16515f" />
+
 # Kosten Kalkulation
 
 | Pos. | Bezeichnung | Beschreibung | Link | Anzahl | Preis | Gesamt |
